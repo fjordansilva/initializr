@@ -16,13 +16,12 @@
 
 package io.spring.initializr.metadata;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Configuration of the initializr service.
@@ -32,187 +31,226 @@ import org.springframework.util.StringUtils;
 @ConfigurationProperties(prefix = "initializr")
 public class InitializrProperties extends InitializrConfiguration {
 
-	/**
-	 * Dependencies, organized in groups (i.e. themes).
-	 */
-	@JsonIgnore
-	private final List<DependencyGroup> dependencies = new ArrayList<>();
+    /**
+     * Dependencies, organized in groups (i.e. themes).
+     */
+    @JsonIgnore
+    private final List<DependencyGroup> dependencies = new ArrayList<>();
 
-	/**
-	 * Available project types.
-	 */
-	@JsonIgnore
-	private final List<Type> types = new ArrayList<>();
+    /**
+     * Available project types.
+     */
+    @JsonIgnore
+    private final List<Type> types = new ArrayList<>();
 
-	/**
-	 * Available packaging types.
-	 */
-	@JsonIgnore
-	private final List<DefaultMetadataElement> packagings = new ArrayList<>();
+    /**
+     * Available packaging types.
+     */
+    @JsonIgnore
+    private final List<DefaultMetadataElement> packagings = new ArrayList<>();
 
-	/**
-	 * Available java versions.
-	 */
-	@JsonIgnore
-	private final List<DefaultMetadataElement> javaVersions = new ArrayList<>();
+    /**
+     * Available java versions.
+     */
+    @JsonIgnore
+    private final List<DefaultMetadataElement> javaVersions = new ArrayList<>();
 
-	/**
-	 * Available programming languages.
-	 */
-	@JsonIgnore
-	private final List<DefaultMetadataElement> languages = new ArrayList<>();
+    /**
+     * Available programming languages.
+     */
+    @JsonIgnore
+    private final List<DefaultMetadataElement> languages = new ArrayList<>();
 
-	/**
-	 * Available Spring Boot versions.
-	 */
-	@JsonIgnore
-	private final List<DefaultMetadataElement> bootVersions = new ArrayList<>();
+    /**
+     * Available Spring Boot versions.
+     */
+    @JsonIgnore
+    private final List<DefaultMetadataElement> bootVersions = new ArrayList<>();
 
-	/**
-	 * GroupId metadata.
-	 */
-	@JsonIgnore
-	private final SimpleElement groupId = new SimpleElement("com.example");
+    /**
+     * Available Continuous Integration Types.
+     */
+    @JsonIgnore
+    private final List<DefaultMetadataElement> ci = new ArrayList<>();
 
-	/**
-	 * ArtifactId metadata.
-	 */
-	@JsonIgnore
-	private final SimpleElement artifactId = new SimpleElement(null);
+    /**
+     * Available Container Types.
+     */
+    @JsonIgnore
+    private final List<DefaultMetadataElement> container = new ArrayList<>();
 
-	/**
-	 * Version metadata.
-	 */
-	@JsonIgnore
-	private final SimpleElement version = new SimpleElement("0.0.1-SNAPSHOT");
+    /**
+     * Renault IRN.
+     */
+    @JsonIgnore
+    private final SimpleElement irn = new SimpleElement("IRN-XXXXX");
 
-	/**
-	 * Name metadata.
-	 */
-	@JsonIgnore
-	private final SimpleElement name = new SimpleElement("demo");
+    /**
+     * Renault SIA.
+     */
+    @JsonIgnore
+    private final SimpleElement sia = new SimpleElement("AAA");
 
-	/**
-	 * Description metadata.
-	 */
-	@JsonIgnore
-	private final SimpleElement description = new SimpleElement(
-			"Demo project for Spring Boot");
+    /**
+     * GroupId metadata.
+     */
+    @JsonIgnore
+    private final SimpleElement groupId = new SimpleElement("com.example");
 
-	/**
-	 * Package name metadata.
-	 */
-	@JsonIgnore
-	private final SimpleElement packageName = new SimpleElement(null);
+    /**
+     * ArtifactId metadata.
+     */
+    @JsonIgnore
+    private final SimpleElement artifactId = new SimpleElement(null);
 
-	public List<DependencyGroup> getDependencies() {
-		return this.dependencies;
-	}
+    /**
+     * Version metadata.
+     */
+    @JsonIgnore
+    private final SimpleElement version = new SimpleElement("1.0.0-SNAPSHOT");
 
-	public List<Type> getTypes() {
-		return this.types;
-	}
+    /**
+     * Name metadata.
+     */
+    @JsonIgnore
+    private final SimpleElement name = new SimpleElement("demo");
 
-	public List<DefaultMetadataElement> getPackagings() {
-		return this.packagings;
-	}
+    /**
+     * Description metadata.
+     */
+    @JsonIgnore
+    private final SimpleElement description = new SimpleElement("Demo project for Spring Boot");
 
-	public List<DefaultMetadataElement> getJavaVersions() {
-		return this.javaVersions;
-	}
+    /**
+     * Package name metadata.
+     */
+    @JsonIgnore
+    private final SimpleElement packageName = new SimpleElement(null);
 
-	public List<DefaultMetadataElement> getLanguages() {
-		return this.languages;
-	}
+    public List<DependencyGroup> getDependencies() {
+        return dependencies;
+    }
 
-	public List<DefaultMetadataElement> getBootVersions() {
-		return this.bootVersions;
-	}
+    public List<Type> getTypes() {
+        return types;
+    }
 
-	public SimpleElement getGroupId() {
-		return this.groupId;
-	}
+    public List<DefaultMetadataElement> getPackagings() {
+        return packagings;
+    }
 
-	public SimpleElement getArtifactId() {
-		return this.artifactId;
-	}
+    public List<DefaultMetadataElement> getJavaVersions() {
+        return javaVersions;
+    }
 
-	public SimpleElement getVersion() {
-		return this.version;
-	}
+    public List<DefaultMetadataElement> getLanguages() {
+        return languages;
+    }
 
-	public SimpleElement getName() {
-		return this.name;
-	}
+    public List<DefaultMetadataElement> getBootVersions() {
+        return bootVersions;
+    }
 
-	public SimpleElement getDescription() {
-		return this.description;
-	}
+    public List<DefaultMetadataElement> getCi() {
+        return ci;
+    }
 
-	public SimpleElement getPackageName() {
-		return this.packageName;
-	}
+    public List<DefaultMetadataElement> getContainer() {
+        return container;
+    }
 
-	/**
-	 * A simple element from the properties.
-	 */
-	public static class SimpleElement {
+    public SimpleElement getIrn() {
+        return irn;
+    }
 
-		/**
-		 * Element title.
-		 */
-		private String title;
+    public SimpleElement getSia() {
+        return sia;
+    }
 
-		/**
-		 * Element description.
-		 */
-		private String description;
+    public SimpleElement getGroupId() {
+        return groupId;
+    }
 
-		/**
-		 * Element default value.
-		 */
-		private String value;
+    public SimpleElement getArtifactId() {
+        return artifactId;
+    }
 
-		public SimpleElement(String value) {
-			this.value = value;
-		}
+    public SimpleElement getVersion() {
+        return version;
+    }
 
-		public String getTitle() {
-			return this.title;
-		}
+    public SimpleElement getName() {
+        return name;
+    }
 
-		public void setTitle(String title) {
-			this.title = title;
-		}
+    public SimpleElement getDescription() {
+        return description;
+    }
 
-		public String getDescription() {
-			return this.description;
-		}
+    public SimpleElement getPackageName() {
+        return packageName;
+    }
 
-		public void setDescription(String description) {
-			this.description = description;
-		}
+    /**
+     * A simple element from the properties.
+     */
+    public static class SimpleElement {
 
-		public String getValue() {
-			return this.value;
-		}
+        /**
+         * Element title.
+         */
+        private String title;
 
-		public void setValue(String value) {
-			this.value = value;
-		}
+        /**
+         * Element description.
+         */
+        private String description;
 
-		public void apply(TextCapability capability) {
-			if (StringUtils.hasText(this.title)) {
-				capability.setTitle(this.title);
-			}
-			if (StringUtils.hasText(this.description)) {
-				capability.setDescription(this.description);
-			}
-			if (StringUtils.hasText(this.value)) {
-				capability.setContent(this.value);
-			}
-		}
+        /**
+         * Element default value.
+         */
+        private String value;
 
-	}
+        public SimpleElement(String value) {
+            this.value = value;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public void apply(TextCapability capability) {
+            if (StringUtils.hasText(title)) {
+                capability.setTitle(title);
+            }
+            if (StringUtils.hasText(description)) {
+                capability.setDescription(description);
+            }
+            if (StringUtils.hasText(value)) {
+                capability.setContent(value);
+            }
+        }
+
+    }
 
 }

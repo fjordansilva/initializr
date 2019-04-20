@@ -16,17 +16,18 @@
 
 package io.spring.initializr.generator.project;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.ci.ContinuousIntegration;
+import io.spring.initializr.generator.container.Container;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
-
 import org.springframework.util.StringUtils;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * An immutable description of a project that is being generated.
@@ -35,111 +36,137 @@ import org.springframework.util.StringUtils;
  */
 public final class ResolvedProjectDescription {
 
-	private final Map<String, Dependency> requestedDependencies;
+    private final Map<String, Dependency> requestedDependencies;
 
-	private final Version platformVersion;
+    private final Version platformVersion;
 
-	private final BuildSystem buildSystem;
+    private final BuildSystem buildSystem;
 
-	private final Packaging packaging;
+    private final Packaging packaging;
 
-	private final Language language;
+    private final Language language;
 
-	private final String groupId;
+    private final ContinuousIntegration ci;
 
-	private final String artifactId;
+    private final Container container;
 
-	private final String version;
+    private final String irn;
 
-	private final String name;
+    private final String sia;
 
-	private final String description;
+    private final String groupId;
 
-	private final String applicationName;
+    private final String artifactId;
 
-	private final String packageName;
+    private final String version;
 
-	private final String baseDirectory;
+    private final String name;
 
-	public ResolvedProjectDescription(ProjectDescription description) {
-		this.platformVersion = description.getPlatformVersion();
-		this.buildSystem = description.getBuildSystem();
-		this.packaging = description.getPackaging();
-		this.language = description.getLanguage();
-		this.groupId = description.getGroupId();
-		this.artifactId = description.getArtifactId();
-		this.version = description.getVersion();
-		this.name = description.getName();
-		this.description = description.getDescription();
-		this.applicationName = description.getApplicationName();
-		this.packageName = getPackageName(description);
-		this.baseDirectory = description.getBaseDirectory();
-		Map<String, Dependency> requestedDependencies = new LinkedHashMap<>(
-				description.getRequestedDependencies());
-		this.requestedDependencies = Collections.unmodifiableMap(requestedDependencies);
-	}
+    private final String description;
 
-	private String getPackageName(ProjectDescription description) {
-		if (StringUtils.hasText(description.getPackageName())) {
-			return description.getPackageName();
-		}
-		if (StringUtils.hasText(description.getGroupId())
-				&& StringUtils.hasText(description.getArtifactId())) {
-			return description.getGroupId() + "." + description.getArtifactId();
-		}
-		return null;
-	}
+    private final String applicationName;
 
-	public Map<String, Dependency> getRequestedDependencies() {
-		return this.requestedDependencies;
-	}
+    private final String packageName;
 
-	public Version getPlatformVersion() {
-		return this.platformVersion;
-	}
+    private final String baseDirectory;
 
-	public BuildSystem getBuildSystem() {
-		return this.buildSystem;
-	}
+    public ResolvedProjectDescription(ProjectDescription description) {
+        platformVersion = description.getPlatformVersion();
+        buildSystem = description.getBuildSystem();
+        packaging = description.getPackaging();
+        language = description.getLanguage();
+        ci = description.getCi();
+        container = description.getContainer();
+        irn = description.getIrn();
+        sia = description.getSia();
+        groupId = description.getGroupId();
+        artifactId = description.getArtifactId();
+        version = description.getVersion();
+        name = description.getName();
+        this.description = description.getDescription();
+        applicationName = description.getApplicationName();
+        packageName = getPackageName(description);
+        baseDirectory = description.getBaseDirectory();
+        Map<String, Dependency> requestedDependencies = new LinkedHashMap<>(description.getRequestedDependencies());
+        this.requestedDependencies = Collections.unmodifiableMap(requestedDependencies);
+    }
 
-	public Packaging getPackaging() {
-		return this.packaging;
-	}
+    private String getPackageName(ProjectDescription description) {
+        if (StringUtils.hasText(description.getPackageName())) {
+            return description.getPackageName();
+        }
+        if (StringUtils.hasText(description.getGroupId()) && StringUtils.hasText(description.getArtifactId())) {
+            return description.getGroupId() + "." + description.getArtifactId();
+        }
+        return null;
+    }
 
-	public Language getLanguage() {
-		return this.language;
-	}
+    public Map<String, Dependency> getRequestedDependencies() {
+        return requestedDependencies;
+    }
 
-	public String getGroupId() {
-		return this.groupId;
-	}
+    public Version getPlatformVersion() {
+        return platformVersion;
+    }
 
-	public String getArtifactId() {
-		return this.artifactId;
-	}
+    public BuildSystem getBuildSystem() {
+        return buildSystem;
+    }
 
-	public String getVersion() {
-		return this.version;
-	}
+    public Packaging getPackaging() {
+        return packaging;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public Language getLanguage() {
+        return language;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public ContinuousIntegration getCi() {
+        return ci;
+    }
 
-	public String getApplicationName() {
-		return this.applicationName;
-	}
+    public Container getContainer() {
+        return container;
+    }
 
-	public String getPackageName() {
-		return this.packageName;
-	}
+    public String getIrn() {
+        return irn;
+    }
 
-	public String getBaseDirectory() {
-		return this.baseDirectory;
-	}
+    public String getSia() {
+        return sia;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public String getBaseDirectory() {
+        return baseDirectory;
+    }
 
 }

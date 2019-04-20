@@ -1,0 +1,41 @@
+FROM openjdk:8-jre-alpine
+
+# LABELs - Renault Mandatory
+LABEL IRN = "{{irn}}"
+LABEL SIA = "{{sia}}"
+LABEL contact_project = "Fernando Jordan Silva (fernando.jordan@renault.com)"
+LABEL Version = "{{version}}"
+LABEL path_dockerfile = "/usr/shared/{{sia}}/Dockerfile"
+
+# Other LABELs
+LABEL description = "{{description}}"
+
+# Custom arguments
+ARG http_proxy
+ARG https_proxy
+
+# Custom paths
+RUN mkdir -p /usr/shared/{{sia}}
+
+# COPY Dockerfile - Mandatory Renault
+COPY Dockerfile /usr/shared/{{sia}}/Dockerfile
+
+# Add curl for HEALTHCHECK - Mandatory Renault
+RUN apk add --update curl && rm -rf /var/cache/apk/*
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Ejecutable
+COPY target/{{artifactId}}-*.jar app.jar
+
+# ########################## #
+# CUSTOM ENVIRONMENT OPTIONS #
+# ########################## #
+
+
+VOLUME /tmp
+
+# ENV SPRING_PROFILES_ACTIVE dev
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-server", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-jar", "app.jar"]

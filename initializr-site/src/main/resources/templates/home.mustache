@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Spring Initializr</title>
+    <link rel="icon" type="image/png" href="public/favicon.ico">
+    <link href="{{#linkTo}}/1.bundle.css{{/linkTo}}" rel="stylesheet">
+    <link href="{{#linkTo}}/bundle.css{{/linkTo}}" rel="stylesheet">
+    <meta content='The quickest way to generate Spring Boot projects. Simply choose the language, build system and JVM version for the project.  The site also provides a curated list of dependencies that you can add to your application based on the selected Spring Boot version.'
+          name='description' xml:lang='EN'>
+</head>
+<body class="">
+<div>
+    <div class="header">
+        <h1 class="logo">
+            <a href="/" aria-label="Renault Spring - Start your application">
+                <img src="public/renault-logo.png"
+                     style="width:75px; float: left; margin-left: -75px; margin-top: -12px; margin-right: 20px"/>
+                <div>
+                    <strong>RSIE <span>Generator</span></strong>Start your application
+                </div>
+            </a>
+        </h1>
+    </div>
+    <form name="form" action="/starter.zip" method="get" autocomplete="off">
+        <input style="display:none" type="text" name="fakeusernameremembered"/>
+        <input style="display:none" type="password" name="fakepasswordremembered"/>
+        <div class="line">
+            <div class="left">Project</div>
+            <div class="right">
+                <div class="radios">
+                    {{#types.content}}
+                        <div class="radio{{#default}} active{{/default}}">
+                            <a href="#" data-value="{{id}}">{{name}}</a>
+                        </div>
+                        {{#default}}<input type="hidden" name="type" value="{{id}}">{{/default}}
+                    {{/types.content}}
+                </div>
+            </div>
+        </div>
+        <div class="line">
+            <div class="left">Language</div>
+            <div class="right">
+                <div class="radios">
+                    {{#languages.content}}
+                        <div class="radio{{#default}} active{{/default}}">
+                            <a href="#" data-value="{{id}}">{{name}}</a>
+                        </div>
+                        {{#default}}<input type="hidden" name="language" value="{{id}}">{{/default}}
+                    {{/languages.content}}
+                </div>
+            </div>
+        </div>
+        <div class="line">
+            <div class="left">Spring Boot</div>
+            <div class="right">
+                <div class="radios">
+                    {{#bootVersions.content}}
+                        <div class="radio{{#default}} active{{/default}}">
+                            <a href="#" data-value="{{id}}">{{name}}</a>
+                        </div>
+                        {{#default}}
+                            <input id="input-boot-version" type="hidden" name="bootVersion" value="{{id}}">{{/default}}
+                    {{/bootVersions.content}}
+                </div>
+            </div>
+        </div>
+        <!-- CI -->
+        <div class="line">
+            <div class="left">Continuous Integration</div>
+            <div class="right">
+                <div class="radios">
+                    {{#ci.content}}
+                        <div class="radio{{#default}} active{{/default}}">
+                            <a href="#" data-value="{{id}}">{{name}}</a>
+                        </div>
+                        {{#default}}
+                            <input id="input-ci-type" type="hidden" name="ci" value="{{id}}">{{/default}}
+                    {{/ci.content}}
+                </div>
+            </div>
+        </div>
+        <!-- Containers -->
+        <div class="line">
+            <div class="left">Container</div>
+            <div class="right">
+                <div class="radios">
+                    {{#container.content}}
+                        <div class="radio{{#default}} active{{/default}}">
+                            <a href="#" data-value="{{id}}">{{name}}</a>
+                        </div>
+                        {{#default}}
+                            <input id="input-container-type" type="hidden" name="container"
+                                   value="{{id}}">{{/default}}
+                    {{/container.content}}
+                </div>
+            </div>
+        </div>
+        <!-- Metadata -->
+        <div class="line">
+            <div class="left">Project Metadata</div>
+            <div class="right">
+                <div class="project-metadata">
+                    <input id="baseDir" name="baseDir" type="hidden" value="{{artifactId.content}}">
+                    <!-- IRN -->
+                    <div class="control"><label>{{irn.title}}</label>
+                        <input class="control-text" name="irn" value="{{irn.content}}" tabindex="1">
+                    </div>
+                    <!-- SIA -->
+                    <div class="control"><label>{{sia.title}}</label>
+                        <input class="control-text" name="sia" value="{{sia.content}}" tabindex="2">
+                    </div>
+
+                    <div class="control"><label>{{groupId.title}}</label>
+                        <input class="control-text" name="groupId" value="{{groupId.content}}" tabindex="3">
+                    </div>
+                    <div class="control"><label>{{artifactId.title}}</label>
+                        <input class="control-text" name="artifactId" value="{{artifactId.content}}" tabindex="4">
+                    </div>
+                    <div class="more-block">
+                        <div id="more-block" style="display: none;">
+                            <div class="control"><label>{{name.title}}</label>
+                                <input class="control-text" name="name" value="{{name.content}}">
+                            </div>
+                            <div class="control"><label>{{description.title}}</label>
+                                <input class="control-text" name="description" value="{{description.content}}">
+                            </div>
+                            <div class="control"><label>{{packageName.title}}</label>
+                                <input class="control-text" name="packageName" value="{{packageName.content}}">
+                            </div>
+                            <div class="control"><label>{{packagings.title}}</label>
+                                <div class="radios">
+                                    {{#packagings.content}}
+                                        <div class="radio{{#default}} active{{/default}}">
+                                            <a href="#" data-value="{{id}}">{{name}}</a>
+                                        </div>
+                                        {{#default}}<input type="hidden" name="packaging" value="{{id}}">{{/default}}
+                                    {{/packagings.content}}
+                                </div>
+                            </div>
+                            <div class="control"><label>{{javaVersions.title}}</label>
+                                <div class="radios">
+                                    {{#javaVersions.content}}
+                                        <div class="radio{{#default}} active{{/default}}">
+                                            <a href="#" data-value="{{id}}">{{name}}</a>
+                                        </div>
+                                        {{#default}}<input type="hidden" name="javaVersion" value="{{id}}">{{/default}}
+                                    {{/javaVersions.content}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control control-submit">
+                        <p id="more-options">
+                            <button type="button" class="btn">More options</button>
+                        </p>
+                        <p id="fewer-options" class="hide">
+                            <button type="button" class="btn">Fewer options</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="line">
+            <div class="left">
+                <div class="dependencies-label">Dependencies <a id="see-all">See all</a></div>
+            </div>
+            <div class="right">
+                <div class="colset">
+                    <div class="col">Search dependencies to add
+                        <div class="control"><input id="inputSearch" name="inputSearch" class="control-text"
+                                                    autocomplete="disabled" type="text" tabindex="3"
+                                                    placeholder="Web, Security, JPA, Actuator, Devtools..." value="">
+                        </div>
+                        <div class="no-result" id="noresult-to-add"><em>No result.</em></div>
+                        <div class="list" id="list-to-add"></div>
+                    </div>
+                    <div class="col hide" id="col-dep">
+                        <strong>Selected dependencies</strong>
+                        <div class="list light" id="list-added"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="line row-action">
+            <div class="left">
+                <div class="footer">© 2019 RSIE<br/>This tool is powered by<br><a
+                        href="https://github.com/spring-io/initializr/" tabindex="998">Spring Initializr</a> and <a
+                        href="https://run.pivotal.io/" tabindex="999">Pivotal Web Services</a></div>
+            </div>
+            <div class="right">
+                <div class="submit">
+                    <button id="btn-generate" type="submit" class="btn btn-primary" tabindex="4">
+                        <span class="text">Generate Project</span> -
+                        <span class="shortcut"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="overlay" class="overlay"></div>
+<div id="wrapper-modal" class="wrapper-modal">
+    <div class="modal" id="modal-dependencies">
+        <div class="modal-header">
+            <h2 id="dependencies-list-title">List of dependencies for <strong>Spring Boot </strong></h2>
+            <a class="close close-modal"><i class="fas fa-times"></i></a>
+        </div>
+        <div class="modal-body">
+            <div class="modal-body-list" id="dependencies-list"></div>
+        </div>
+        <div class="modal-footer">
+            <button id="btn-validate" type="button" class="btn btn-primary">Update dependencies</button>
+            <button type="button" class="btn close-modal">Cancel</button>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.6.2/mousetrap.min.js" crossorigin="anonymous"></script>
+<script src="{{#linkTo}}js/1.chunk.js{{/linkTo}}"></script>
+<script src="{{#linkTo}}js/app.js{{/linkTo}}"></script>
+</body>
+</html>

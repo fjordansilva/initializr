@@ -1,0 +1,86 @@
+# basic gitlab-ci
+variables:
+  SIA: "bhl"
+  IRN: "IRN-70829"
+  ORG: "rsie"
+  NAME: "bridge"
+
+  proxy_domain: web-proxy.infra.dub.aws.renault.azn
+  proxy_port: 3128
+  https_proxy: http://${proxy_domain}:${proxy_port}
+  http_proxy: http://${proxy_domain}:${proxy_port}
+
+  MVN_VERSION: "3.6.0-jdk-8"
+  MVM_SETTINGS: "./sonar-settings.xml"
+  MVN_OPTS: -Dhttp.proxyHost=${proxy_domain} -Dhttp.proxyPort=${proxy_port} -Dhttps.proxyHost=${proxy_domain} -Dhttps.proxyPort=${proxy_port}
+
+  APP_VERSION: "$CI_PIPELINE_ID"
+  REGISTRY: "s2144tds.mc2.renault.fr:5000"
+
+  TESTING: "false"
+  INFRA: "dev"
+
+# Runner tags
+.tags_build: &tags_build
+  tags:
+    - shared
+    - docker
+    - build
+    - aws
+    - rlt
+
+.tags_build_image: &tags_build_image
+  tags:
+    - shared
+    - docker
+    - build
+    - aws
+    - rlt
+
+stages:
+  - init
+  - test
+  - quality
+  - package
+  - dockerize
+
+# Init, test and quality section
+init_maven:
+  <<: *tags_build
+  image: maven:${MVN_VERSION}
+  stage: init
+  script:
+    - mvn ${MVN_OPTS} -s ${MVM_SETTINGS} dependency:go-offline
+
+unit_testing:
+  <<: *tags_build
+  image: maven:${MVN_VERSION}
+  stage: test
+  script:
+    - mvn ${MVN_OPTS} -s ${MVM_SETTINGS} clean test
+  only:
+    variables:
+      - $TESTING == "true"
+
+sonarqube:
+  <<: *tags_build
+  image: maven:${MVN_VERSION}
+  stage: quality
+  script:
+    - mvn ${MVN_OPTS} -s ${MVM_SETTINGS} sonar:sonar
+
+# Build package
+build:
+  <<: *tags_build
+  image: maven:${MVN_VERSION}
+  stage: package
+  script:
+    - mvn ${MVN_OPTS} -s ${MVM_SETTINGS} clean package -Dmaven.test.skip=true
+
+# Docker image
+build_docker:
+  <<: *tags_build_image
+  stage: dockerize
+  script:
+    - docker build -t ${REGISTRY}/${SIA}/${SIA}-${NAME}:${APP_VERSION} .
+    - docker push ${REGISTRY}/${SIA}/${SIA}-${NAME}:${APP_VERSION}

@@ -16,15 +16,17 @@
 
 package io.spring.initializr.generator.project;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.ci.ContinuousIntegration;
+import io.spring.initializr.generator.container.Container;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Description of a project to generate.
@@ -33,142 +35,183 @@ import io.spring.initializr.generator.version.Version;
  */
 public class ProjectDescription {
 
-	private Version platformVersion;
+    private Version platformVersion;
 
-	private BuildSystem buildSystem;
+    private BuildSystem buildSystem;
 
-	private Packaging packaging;
+    private Packaging packaging;
 
-	private Language language;
+    private Language language;
 
-	private final Map<String, Dependency> requestedDependencies = new LinkedHashMap<>();
+    private ContinuousIntegration ci;
 
-	private String groupId;
+    private Container container;
 
-	private String artifactId;
+    private final Map<String, Dependency> requestedDependencies = new LinkedHashMap<>();
 
-	private String version;
+    private String irn;
 
-	private String name;
+    private String sia;
 
-	private String description;
+    private String groupId;
 
-	private String applicationName;
+    private String artifactId;
 
-	private String packageName;
+    private String version;
 
-	private String baseDirectory;
+    private String name;
 
-	/**
-	 * Resolve the state of this instance to a {@link ResolvedProjectDescription}.
-	 * @return an immutable description.
-	 */
-	public ResolvedProjectDescription resolve() {
-		return new ResolvedProjectDescription(this);
-	}
+    private String description;
 
-	public Version getPlatformVersion() {
-		return this.platformVersion;
-	}
+    private String applicationName;
 
-	public void setPlatformVersion(Version platformVersion) {
-		this.platformVersion = platformVersion;
-	}
+    private String packageName;
 
-	public BuildSystem getBuildSystem() {
-		return this.buildSystem;
-	}
+    private String baseDirectory;
 
-	public void setBuildSystem(BuildSystem buildSystem) {
-		this.buildSystem = buildSystem;
-	}
+    /**
+     * Resolve the state of this instance to a {@link ResolvedProjectDescription}.
+     *
+     * @return an immutable description.
+     */
+    public ResolvedProjectDescription resolve() {
+        return new ResolvedProjectDescription(this);
+    }
 
-	public Packaging getPackaging() {
-		return this.packaging;
-	}
+    public Version getPlatformVersion() {
+        return platformVersion;
+    }
 
-	public void setPackaging(Packaging packaging) {
-		this.packaging = packaging;
-	}
+    public void setPlatformVersion(Version platformVersion) {
+        this.platformVersion = platformVersion;
+    }
 
-	public Language getLanguage() {
-		return this.language;
-	}
+    public BuildSystem getBuildSystem() {
+        return buildSystem;
+    }
 
-	public void setLanguage(Language language) {
-		this.language = language;
-	}
+    public void setBuildSystem(BuildSystem buildSystem) {
+        this.buildSystem = buildSystem;
+    }
 
-	public Dependency addDependency(String id, Dependency dependency) {
-		return this.requestedDependencies.put(id, dependency);
-	}
+    public Packaging getPackaging() {
+        return packaging;
+    }
 
-	public Map<String, Dependency> getRequestedDependencies() {
-		return Collections.unmodifiableMap(this.requestedDependencies);
-	}
+    public void setPackaging(Packaging packaging) {
+        this.packaging = packaging;
+    }
 
-	public String getGroupId() {
-		return this.groupId;
-	}
+    public Language getLanguage() {
+        return language;
+    }
 
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
 
-	public String getArtifactId() {
-		return this.artifactId;
-	}
+    public ContinuousIntegration getCi() {
+        return ci;
+    }
 
-	public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
-	}
+    public void setCi(ContinuousIntegration ci) {
+        this.ci = ci;
+    }
 
-	public String getVersion() {
-		return this.version;
-	}
+    public Container getContainer() {
+        return container;
+    }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    public void setContainer(Container container) {
+        this.container = container;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public Dependency addDependency(String id, Dependency dependency) {
+        return requestedDependencies.put(id, dependency);
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public Map<String, Dependency> getRequestedDependencies() {
+        return Collections.unmodifiableMap(requestedDependencies);
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getIrn() {
+        return irn;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setIrn(String irn) {
+        this.irn = irn;
+    }
 
-	public String getApplicationName() {
-		return this.applicationName;
-	}
+    public String getSia() {
+        return sia;
+    }
 
-	public void setApplicationName(String applicationName) {
-		this.applicationName = applicationName;
-	}
+    public void setSia(String sia) {
+        this.sia = sia;
+    }
 
-	public String getPackageName() {
-		return this.packageName;
-	}
+    public String getGroupId() {
+        return groupId;
+    }
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
 
-	public String getBaseDirectory() {
-		return this.baseDirectory;
-	}
+    public String getArtifactId() {
+        return artifactId;
+    }
 
-	public void setBaseDirectory(String baseDirectory) {
-		this.baseDirectory = baseDirectory;
-	}
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getBaseDirectory() {
+        return baseDirectory;
+    }
+
+    public void setBaseDirectory(String baseDirectory) {
+        this.baseDirectory = baseDirectory;
+    }
 
 }

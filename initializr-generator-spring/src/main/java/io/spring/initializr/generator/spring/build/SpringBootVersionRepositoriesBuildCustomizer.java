@@ -28,27 +28,28 @@ import io.spring.initializr.generator.version.Version;
  */
 class SpringBootVersionRepositoriesBuildCustomizer implements BuildCustomizer<Build> {
 
-	private final Version springBootVersion;
+    private final Version springBootVersion;
 
-	SpringBootVersionRepositoriesBuildCustomizer(Version springBootVersion) {
-		this.springBootVersion = springBootVersion;
-	}
+    SpringBootVersionRepositoriesBuildCustomizer(Version springBootVersion) {
+        this.springBootVersion = springBootVersion;
+    }
 
-	@Override
-	public void customize(Build build) {
-		build.repositories().add("maven-central");
-		String qualifier = this.springBootVersion.getQualifier().getQualifier();
-		if (!"RELEASE".equals(qualifier)) {
-			MavenRepository snapshotRepository = new MavenRepository("spring-snapshots",
-					"Spring Snapshots", "https://repo.spring.io/snapshot", true);
-			build.repositories().add(snapshotRepository);
-			build.pluginRepositories().add(snapshotRepository);
-			MavenRepository milestoneRepository = new MavenRepository("spring-milestones",
-					"Spring Milestones", "https://repo.spring.io/milestone");
-			build.repositories().add(milestoneRepository);
-			build.pluginRepositories().add(milestoneRepository);
-		}
+    @Override
+    public void customize(Build build) {
+        // TODO: Cambiar por el repo de Renault
+        build.repositories().add("maven-central");
+        String qualifier = springBootVersion.getQualifier().getQualifier();
+        if (!"RELEASE".equals(qualifier)) {
+            MavenRepository snapshotRepository = new MavenRepository("spring-snapshots",
+                    "Spring Snapshots", "https://repo.spring.io/snapshot", true);
+            build.repositories().add(snapshotRepository);
+            build.pluginRepositories().add(snapshotRepository);
+            MavenRepository milestoneRepository = new MavenRepository("spring-milestones",
+                    "Spring Milestones", "https://repo.spring.io/milestone");
+            build.repositories().add(milestoneRepository);
+            build.pluginRepositories().add(milestoneRepository);
+        }
 
-	}
+    }
 
 }
