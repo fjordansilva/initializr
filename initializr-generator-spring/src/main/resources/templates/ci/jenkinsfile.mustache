@@ -1,0 +1,151 @@
+#!groovy
+// *********************
+//      JENKINSFILE
+// *********************
+properties([[$class: 'BuildDiscarderProperty',
+{{tab}}strategy: [$class: 'LogRotator',
+{{tab}}artifactDaysToKeepStr: '',
+{{tab}}artifactNumToKeepStr: '',
+{{tab}}daysToKeepStr: '',
+{{tab}}numToKeepStr: '50']]])
+
+// Application Properties
+def sia = '{{sia}}'
+def irn = '{{irn}}'
+def organization = 'rsie';
+def target = 'DEV';
+def docker_registry
+def deployStackScript
+def app_name = '{{artifactId}}'
+def GIT_COMMIT_HASH = "${env.BUILD_NUMBER}"
+
+def nodeName = 'docker_sandbox'
+
+switch ( target ) {
+{{tab}}case "DEV":
+{{tab}}{{tab}}docker_registry = 's2144tds.mc2.renault.fr:5000'
+{{tab}}{{tab}}deployStackScript = 'deployStack'
+{{tab}}{{tab}}nodeName = 'docker_sandbox'
+{{tab}}{{tab}}break
+
+{{tab}}case "RE7":
+{{tab}}{{tab}}docker_registry = 'sfc-registry.lha.renault.fr:5000'
+{{tab}}{{tab}}deployStackScript = 'deployStackSFC'
+{{tab}}{{tab}}nodeName = 'docker_deploy_intra'
+{{tab}}{{tab}}break
+
+{{tab}}case "OPE":
+{{tab}}{{tab}}docker_registry = 'sfc-registry.lha.renault.fr:5000'
+{{tab}}{{tab}}deployStackScript = 'deployStackSFC'
+{{tab}}{{tab}}nodeName = 'docker_deploy_ops'
+{{tab}}{{tab}}break
+}
+
+// Scripted Jenkins pipeline
+// dedicated node use node('node_name')
+// https://confluence.dt.renault.com/display/DEV/Docker+Pipeline+-+WIP#DockerPipeline-WIP-ProcessDescriptionThroughtheJenkinsfile-Part1:Build&Deploy
+// Node name            Env    Build  Deploy         Git
+// docker_deploy_intra  Intra  Yes    DEV, RE7, OPE  No
+// docker_deploy_ops    OPS    Yes    RE7, OPE       No
+// docker_sandbox       Intra  Yes    DEV            Yes
+node(nodeName) {
+{{tab}}def app;
+
+{{tab}}echo "Running on node ${nodeName}"
+
+{{tab}}// Ensure maven is available
+{{tab}}if ( target == 'DEV' || target == 'RE7' || target == 'OPE' ) {
+{{tab}}{{tab}}stage('Initialization') {
+{{tab}}{{tab}}{{tab}}echo "Initialization of pipeline"
+{{tab}}{{tab}}{{tab}}echo "Running build #${env.BUILD_ID} on ${env.JENKINS_URL}"
+{{tab}}{{tab}}{{tab}}ensureMvn()
+{{tab}}{{tab}}}
+{{tab}}}
+
+{{tab}}// Checkout source code from the repository
+{{tab}}if ( target == 'DEV' || target == 'RE7' || target == 'OPE' ) {
+{{tab}}{{tab}}stage('Clone Repository') {
+{{tab}}{{tab}}{{tab}}checkout scm
+{{tab}}{{tab}}{{tab}}GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
+{{tab}}{{tab}}}
+{{tab}}}
+
+{{tab}}// Test
+{{tab}}if ( target == 'DEV' || target == 'RE7' || target == 'OPE' ) {
+{{tab}}{{tab}}stage('Test') {
+{{tab}}{{tab}}{{tab}}echo "Branch name: ${env.BRANCH_NAME}"
+{{tab}}{{tab}}{{tab}}// if (env.BRANCH_NAME == 'master') {
+{{tab}}{{tab}}{{tab}}mvnTest()
+{{tab}}{{tab}}{{tab}}echo "Test executed Successfully"
+{{tab}}{{tab}}{{tab}}// }
+{{tab}}{{tab}}}
+{{tab}}}
+
+{{tab}}// Build and create the package
+{{tab}}if ( target == 'DEV' || target == 'RE7' || target == 'OPE' ) {
+{{tab}}{{tab}}stage('Build & Package - tests skipped') {
+{{tab}}{{tab}}{{tab}}// if (env.BRANCH_NAME == 'master') {
+{{tab}}{{tab}}{{tab}}mvnPackage()
+{{tab}}{{tab}}{{tab}}echo "Application Built Successfully"
+{{tab}}{{tab}}{{tab}}// }
+{{tab}}{{tab}}}
+{{tab}}}
+
+{{tab}}// Quality check: Sonar
+{{tab}}if ( target == 'DEV' || target == 'RE7' || target == 'OPE' ) {
+{{tab}}{{tab}}stage('Source code analysis') {
+{{tab}}{{tab}}{{tab}}sonar()
+{{tab}}{{tab}}{{tab}}echo "Source code analysis completed"
+{{tab}}{{tab}}}
+{{tab}}}
+
+{{tab}}// Build docker image
+{{tab}}if ( target == 'DEV' || target == 'RE7' || target == 'OPE' ) {
+{{tab}}{{tab}}stage('Build Docker Image') {
+{{tab}}{{tab}}{{tab}}app = docker.build("${organization}/${app_name}", "-f Dockerfile .")
+{{tab}}{{tab}}}
+{{tab}}}
+
+{{tab}}// Push image to registry
+{{tab}}if ( target == 'DEV' || target == 'RE7' || target == 'OPE' ) {
+{{tab}}{{tab}}stage('Push Docker Image') {
+{{tab}}{{tab}}{{tab}}docker.withRegistry('http://${docker_registry}') {
+{{tab}}{{tab}}{{tab}}{{tab}}app.push("${GIT_COMMIT_HASH}")
+{{tab}}{{tab}}{{tab}}{{tab}}app.push()
+{{tab}}{{tab}}{{tab}}}
+{{tab}}{{tab}}}
+{{tab}}}
+}
+
+// node('docker-checker') {
+// sh '''
+// echo "*********** Check image and push to DTR **********"
+// # --to=ope: push to INTRANET docker trust registry (DTR)
+// # --to=ops: push to OPENSTACK docker trust registry (DTR)
+// check_image --sia="${sia}" --from=dev --to=dev --image="${organization}/${app_name}:${GIT_COMMIT_HASH}"
+// '''
+// }
+
+//---------------------------------------------------------
+// Maven command
+//---------------------------------------------------------
+def ensureMvn() {
+{{tab}}env.PATH = "${tool 'M3'}/bin:${env.PATH}"
+}
+
+def mvnTest() {
+{{tab}}sh "mvn -B clean test"
+}
+
+def mvnPackage() {
+{{tab}}sh "mvn -B package -Dmaven.test.skip=true"
+}
+
+//---------------------------------------------------------
+// Sonar command
+//---------------------------------------------------------
+def sonar() {
+{{tab}}configFileProvider([configFile(fileId: 'faa778d7-3c59-44a8-a018-211b7faba481', variable: 'MAVEN_SETTINGS_XML')]) {
+{{tab}}{{tab}}sh "mvn -B -s $MAVEN_SETTINGS_XML sonar:sonar"
+{{tab}}}
+}

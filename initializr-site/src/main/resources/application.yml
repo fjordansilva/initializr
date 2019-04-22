@@ -28,7 +28,16 @@ spring:
           enabled: true
 
 initializr:
+  proxy:
+    enabled: true
+    host: 138.21.17.33
+    port: 3128
+    username: s015447
+    password: CUervo34
+
   env:
+    spring-boot-version-tags:
+      - GENERAL_AVAILABILITY
     boms:
       azure:
         groupId: com.microsoft.azure
@@ -153,6 +162,7 @@ initializr:
         name: Sonatype Snapshots
         url: https://oss.sonatype.org/content/repositories/snapshots/
         snapshotsEnabled: true
+
   dependencies:
     - name: Core
       content:

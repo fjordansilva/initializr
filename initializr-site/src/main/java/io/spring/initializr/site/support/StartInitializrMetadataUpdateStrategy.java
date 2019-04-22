@@ -33,29 +33,28 @@ import java.util.stream.Collectors;
  *
  * @author Stephane Nicoll
  */
-public class StartInitializrMetadataUpdateStrategy
-        extends DefaultInitializrMetadataUpdateStrategy {
+public class StartInitializrMetadataUpdateStrategy extends DefaultInitializrMetadataUpdateStrategy {
 
-    public StartInitializrMetadataUpdateStrategy(RestTemplate restTemplate,
-                                                 ObjectMapper objectMapper) {
+    public StartInitializrMetadataUpdateStrategy(RestTemplate restTemplate, ObjectMapper objectMapper) {
         super(restTemplate, objectMapper);
     }
 
     @Override
     protected List<DefaultMetadataElement> fetchSpringBootVersions(String url) {
-        return super.fetchSpringBootVersions(url).stream()
-                .filter(this::isStartGenerationVersion).collect(Collectors.toList());
+        return super
+                .fetchSpringBootVersions(url)
+                .stream()
+                .filter(this::isStartGenerationVersion)
+                .collect(Collectors.toList());
     }
 
     private boolean isStartGenerationVersion(DefaultMetadataElement element) {
         Version springBootVersion = Version.parse(element.getId());
         System.out.println("SpringBoot Version: " + springBootVersion);
-        if (springBootVersion.getMajor().equals(2)
-                && springBootVersion.getMinor().equals(0)) {
+        if (springBootVersion.getMajor().equals(2) && springBootVersion.getMinor().equals(0)) {
             return false;
         }
-        if ("BUILD-SNAPSHOT".equals(springBootVersion.getQualifier().getQualifier())
-                && springBootVersion.getMajor().equals(1)) {
+        if ("BUILD-SNAPSHOT".equals(springBootVersion.getQualifier().getQualifier()) && springBootVersion.getMajor().equals(1)) {
             return false;
         }
         // TODO: Quitar SNAPSHOTS

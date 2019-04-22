@@ -1,0 +1,86 @@
+# basic gitlab-ci
+variables:
+{{tab}}SIA: "{{sia}}"
+{{tab}}IRN: "{{irn}}"
+{{tab}}ORG: "rsie"
+{{tab}}NAME: "{{artifactId}}"
+
+{{tab}}proxy_domain: web-proxy.infra.dub.aws.renault.azn
+{{tab}}proxy_port: 3128
+{{tab}}https_proxy: http://${proxy_domain}:${proxy_port}
+{{tab}}http_proxy: http://${proxy_domain}:${proxy_port}
+
+{{tab}}MVN_VERSION: "3.6.0-jdk-8"
+{{tab}}MVM_SETTINGS: "./sonar-settings.xml"
+{{tab}}MVN_OPTS: -Dhttp.proxyHost=${proxy_domain} -Dhttp.proxyPort=${proxy_port} -Dhttps.proxyHost=${proxy_domain} -Dhttps.proxyPort=${proxy_port}
+
+{{tab}}APP_VERSION: "$CI_PIPELINE_ID"
+{{tab}}REGISTRY: "s2144tds.mc2.renault.fr:5000"
+
+{{tab}}TESTING: "false"
+{{tab}}INFRA: "dev"
+
+# Runner tags
+.tags_build: &tags_build
+{{tab}}tags:
+{{tab}}{{tab}}- shared
+{{tab}}{{tab}}- docker
+{{tab}}{{tab}}- build
+{{tab}}{{tab}}- aws
+{{tab}}{{tab}}- rlt
+
+.tags_build_image: &tags_build_image
+{{tab}}tags:
+{{tab}}{{tab}}- shared
+{{tab}}{{tab}}- docker
+{{tab}}{{tab}}- build
+{{tab}}{{tab}}- aws
+{{tab}}{{tab}}- rlt
+
+stages:
+{{tab}}- init
+{{tab}}- test
+{{tab}}- quality
+{{tab}}- package
+{{tab}}- dockerize
+
+# Init, test and quality section
+init_maven:
+{{tab}}{{tag}} *tags_build
+{{tab}}image: maven:${MVN_VERSION}
+{{tab}}stage: init
+{{tab}}script:
+{{tab}}{{tab}}- mvn ${MVN_OPTS} -s ${MVM_SETTINGS} dependency:go-offline
+
+unit_testing:
+{{tab}}{{tag}} *tags_build
+{{tab}}image: maven:${MVN_VERSION}
+{{tab}}stage: test
+{{tab}}script:
+{{tab}}{{tab}}- mvn ${MVN_OPTS} -s ${MVM_SETTINGS} clean test
+{{tab}}only:
+{{tab}}{{tab}}variables:
+{{tab}}{{tab}}{{tab}}- $TESTING== "true"
+
+sonarqube:
+{{tab}}{{tag}} *tags_build
+{{tab}}image: maven:${MVN_VERSION}
+{{tab}}stage: quality
+{{tab}}script:
+{{tab}}{{tab}}- mvn ${MVN_OPTS} -s ${MVM_SETTINGS} sonar:sonar
+
+# Build package
+build:
+{{tab}}{{tag}} *tags_build
+{{tab}}image: maven:${MVN_VERSION}
+{{tab}}stage: package
+{{tab}}script:
+{{tab}}{{tab}}- mvn ${MVN_OPTS} -s ${MVM_SETTINGS} clean package -Dmaven.test.skip=true
+
+# Docker image
+build_docker:
+{{tab}}{{tag}} *tags_build_image
+{{tab}}stage: dockerize
+{{tab}}script:
+{{tab}}{{tab}}- docker build -t ${REGISTRY}/${SIA}/${SIA}-${NAME}:${APP_VERSION} .
+{{tab}}{{tab}}- docker push ${REGISTRY}/${SIA}/${SIA}-${NAME}:${APP_VERSION}

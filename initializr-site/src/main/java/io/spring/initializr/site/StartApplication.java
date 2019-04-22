@@ -49,15 +49,12 @@ public class StartApplication {
     }
 
     @Bean
-    public InitializrMetadataUpdateStrategy startMetadataUpdateStrategy(
-			RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper) {
-        return new StartInitializrMetadataUpdateStrategy(restTemplateBuilder.build(),
-                objectMapper);
+    public InitializrMetadataUpdateStrategy startMetadataUpdateStrategy(RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper) {
+        return new StartInitializrMetadataUpdateStrategy(restTemplateBuilder.build(), objectMapper);
     }
 
     @Bean
-    public HomeController homeController(InitializrMetadataProvider metadataProvider,
-										 ResourceUrlProvider resourceUrlProvider) {
+    public HomeController homeController(InitializrMetadataProvider metadataProvider, ResourceUrlProvider resourceUrlProvider) {
         return new HomeController(metadataProvider, resourceUrlProvider);
     }
 

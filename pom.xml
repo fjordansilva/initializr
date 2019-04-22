@@ -54,7 +54,7 @@
         <module>initializr-generator</module>
         <module>initializr-generator-spring</module>
         <module>initializr-metadata</module>
-        <module>initializr-web</module>
+        <module>initializr-rest</module>
         <module>initializr-client</module>
         <module>initializr-site</module>
     </modules>
@@ -95,12 +95,12 @@
             </dependency>
             <dependency>
                 <groupId>io.spring.initializr</groupId>
-                <artifactId>initializr-web</artifactId>
+                <artifactId>initializr-rest</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>io.spring.initializr</groupId>
-                <artifactId>initializr-web</artifactId>
+                <artifactId>initializr-rest</artifactId>
                 <version>${revision}</version>
                 <type>test-jar</type>
             </dependency>

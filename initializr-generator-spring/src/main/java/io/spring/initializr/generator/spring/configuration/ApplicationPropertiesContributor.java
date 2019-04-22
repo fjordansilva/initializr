@@ -18,20 +18,42 @@ package io.spring.initializr.generator.spring.configuration;
 
 import io.spring.initializr.generator.project.contributor.SingleResourceProjectContributor;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /**
  * A {@link SingleResourceProjectContributor} that contributes a
- * {@code application.properties} file to a project.
+ * {@code application.yml} file to a project.
  *
  * @author Stephane Nicoll
  */
-public class ApplicationPropertiesContributor extends SingleResourceProjectContributor {
+public class ApplicationPropertiesContributor extends ApplicationPropertiesProjectContributor {
 
-	public ApplicationPropertiesContributor() {
-		this("classpath:configuration/application.properties");
-	}
+    public ApplicationPropertiesContributor(ApplicationPropertiesDocument continuousIntegrationDocument) {
+        super(continuousIntegrationDocument);
+    }
 
-	public ApplicationPropertiesContributor(String resourcePattern) {
-		super("src/main/resources/application.properties", resourcePattern);
-	}
+    /**
+     * Contribute additional resources to the project in the specified root directory.
+     *
+     * @param projectRoot
+     *         the root directory of the project
+     *
+     * @throws IOException
+     *         if contributing a resource failed
+     */
+    @Override
+    public void contribute(Path projectRoot) throws IOException {
+        Path file = projectRoot.resolve("src/main/resources/application.yml");
+        if (!Files.exists(file)) {
+            Files.createDirectories(file.getParent());
+            Files.createFile(file);
+        }
+        try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file))) {
+            containerDocument.write(writer);
+        }
+    }
 
 }
