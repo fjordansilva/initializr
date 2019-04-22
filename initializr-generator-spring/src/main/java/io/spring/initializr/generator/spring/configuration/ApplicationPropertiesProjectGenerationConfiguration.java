@@ -50,4 +50,8 @@ public class ApplicationPropertiesProjectGenerationConfiguration {
         return new WebFoldersContributor(build, metadata);
     }
 
+    @Bean
+    public AdditionalConfigurationContributor additionalConfigurationContributor() {
+        return new AdditionalConfigurationContributor("classpath:configuration");
+    }
 }

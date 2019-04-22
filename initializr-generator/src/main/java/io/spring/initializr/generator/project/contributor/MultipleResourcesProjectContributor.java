@@ -16,14 +16,14 @@
 
 package io.spring.initializr.generator.project.contributor;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.FileCopyUtils;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Predicate;
-
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.FileCopyUtils;
 
 /**
  * A {@link ProjectContributor} that contributes all of the resources found beneath a root
@@ -34,39 +34,36 @@ import org.springframework.util.FileCopyUtils;
  */
 public class MultipleResourcesProjectContributor implements ProjectContributor {
 
-	private final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+    private final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
-	private final String rootResource;
+    private final String rootResource;
 
-	private final Predicate<String> executable;
+    private final Predicate<String> executable;
 
-	public MultipleResourcesProjectContributor(String rootResource) {
-		this(rootResource, (filename) -> false);
-	}
+    public MultipleResourcesProjectContributor(String rootResource) {
+        this(rootResource, (filename) -> false);
+    }
 
-	public MultipleResourcesProjectContributor(String rootResource,
-			Predicate<String> executable) {
-		this.rootResource = rootResource;
-		this.executable = executable;
-	}
+    public MultipleResourcesProjectContributor(String rootResource, Predicate<String> executable) {
+        this.rootResource = rootResource;
+        this.executable = executable;
+    }
 
-	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		Resource root = this.resolver.getResource(this.rootResource);
-		Resource[] resources = this.resolver.getResources(this.rootResource + "/**");
-		for (Resource resource : resources) {
-			String filename = resource.getURI().toString()
-					.substring(root.getURI().toString().length() + 1);
-			if (resource.isReadable()) {
-				Path output = projectRoot.resolve(filename);
-				Files.createDirectories(output.getParent());
-				Files.createFile(output);
-				FileCopyUtils.copy(resource.getInputStream(),
-						Files.newOutputStream(output));
-				// TODO Set executable using NIO
-				output.toFile().setExecutable(this.executable.test(filename));
-			}
-		}
-	}
+    @Override
+    public void contribute(Path projectRoot) throws IOException {
+        Resource   root      = resolver.getResource(rootResource);
+        Resource[] resources = resolver.getResources(rootResource + "/**");
+        for (Resource resource : resources) {
+            String filename = resource.getURI().toString().substring(root.getURI().toString().length() + 1);
+            if (resource.isReadable()) {
+                Path output = projectRoot.resolve(filename);
+                Files.createDirectories(output.getParent());
+                Files.createFile(output);
+                FileCopyUtils.copy(resource.getInputStream(), Files.newOutputStream(output));
+                // TODO Set executable using NIO
+                output.toFile().setExecutable(executable.test(filename));
+            }
+        }
+    }
 
 }

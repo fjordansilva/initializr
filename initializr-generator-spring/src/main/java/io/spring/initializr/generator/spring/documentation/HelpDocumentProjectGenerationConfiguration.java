@@ -39,9 +39,12 @@ public class HelpDocumentProjectGenerationConfiguration {
     }
 
     @Bean
-    public HelpDocumentProjectContributor helpDocumentProjectContributor(
-            HelpDocument helpDocument) {
+    public HelpDocumentProjectContributor helpDocumentProjectContributor(HelpDocument helpDocument) {
         return new HelpDocumentProjectContributor(helpDocument);
     }
 
+    @Bean
+    public SupportDocumentsProjectContributor supportDocumentsProjectContributor() {
+        return new SupportDocumentsProjectContributor("classpath:support");
+    }
 }

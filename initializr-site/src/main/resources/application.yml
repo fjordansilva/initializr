@@ -1281,6 +1281,10 @@ initializr:
     - name: 2.1.1.
       id: 2.1.1.RELEASE
       default: true
+  group-id:
+    title: Group
+    description: GroupId for the application
+    value: com.renault
   irn:
     title: Renault IRN
     description: Renault IRN of the project
@@ -1295,7 +1299,7 @@ spring:
   profiles: dev
   resources:
     static_locations:
-      - file:start-client/build/
+      - file:initializr-client/build/
     chain:
       strategy:
         content:
@@ -1303,6 +1307,6 @@ spring:
   devtools:
     restart:
       additional_paths:
-        - start-client/build/
+        - initializr-client/build/
       additional_exclude: "**/*.js,**/*.css"
 

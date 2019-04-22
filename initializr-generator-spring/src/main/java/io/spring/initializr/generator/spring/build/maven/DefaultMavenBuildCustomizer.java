@@ -32,49 +32,91 @@ import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
  */
 public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
-	private final ResolvedProjectDescription projectDescription;
+    private final ResolvedProjectDescription projectDescription;
 
-	private final InitializrMetadata metadata;
+    private final InitializrMetadata metadata;
 
-	public DefaultMavenBuildCustomizer(ResolvedProjectDescription projectDescription,
-			InitializrMetadata metadata) {
-		this.projectDescription = projectDescription;
-		this.metadata = metadata;
-	}
+    public DefaultMavenBuildCustomizer(ResolvedProjectDescription projectDescription,
+                                       InitializrMetadata metadata) {
+        this.projectDescription = projectDescription;
+        this.metadata = metadata;
+    }
 
-	@Override
-	public void customize(MavenBuild build) {
-		build.setName(this.projectDescription.getName());
-		build.setDescription(this.projectDescription.getDescription());
-		build.setProperty("java.version",
-				this.projectDescription.getLanguage().jvmVersion());
-		build.plugin("org.springframework.boot", "spring-boot-maven-plugin");
+    @Override
+    public void customize(MavenBuild build) {
+        build.setName(projectDescription.getName());
+        build.setDescription(projectDescription.getDescription());
 
-		Maven maven = this.metadata.getConfiguration().getEnv().getMaven();
-		String springBootVersion = this.projectDescription.getPlatformVersion()
-				.toString();
-		ParentPom parentPom = maven.resolveParentPom(springBootVersion);
-		if (parentPom.isIncludeSpringBootBom()) {
-			String versionProperty = "spring-boot.version";
-			BillOfMaterials springBootBom = MetadataBuildItemMapper.toBom(this.metadata
-					.createSpringBootBom(springBootVersion, versionProperty));
-			if (!hasBom(build, springBootBom)) {
-				build.addInternalVersionProperty(versionProperty, springBootVersion);
-				build.boms().add("spring-boot", springBootBom);
-			}
-		}
-		if (!maven.isSpringBootStarterParent(parentPom)) {
-			build.setProperty("project.build.sourceEncoding", "UTF-8");
-			build.setProperty("project.reporting.outputEncoding", "UTF-8");
-		}
-		build.parent(parentPom.getGroupId(), parentPom.getArtifactId(),
-				parentPom.getVersion());
-	}
+        // URL
+        build.setUrl("http://www.renault.com");
 
-	private boolean hasBom(MavenBuild build, BillOfMaterials bom) {
-		return build.boms().items()
-				.anyMatch((candidate) -> candidate.getGroupId().equals(bom.getGroupId())
-						&& candidate.getArtifactId().equals(bom.getArtifactId()));
-	}
+        // Organization
+        build.setOrganization("RSIE", "http://www.renault.com");
+
+        // License
+        build.setLicense("The Apache Software License, Version 2.0", "http://www.apache.org/licenses/LICENSE-2.0.txt", "repo");
+
+        // Developers
+        build.developer("s015447", "Fernando Jordan Silva", "fernando.jordan@renault.com").role("Software Architect");
+
+        // Maven Compiler Plugin
+        build.plugin("org.apache.maven.plugins", "maven-compiler-plugin", "${maven.compiler.plugin.version}")
+                .configuration(conf -> conf
+                        .add("source", "${java.version}")
+                        .add("target", "${java.version}")
+                );
+
+        // Spring Boot Maven Plugin
+        build.plugin("org.springframework.boot", "spring-boot-maven-plugin")
+                .execution("spring-boot-maven-plugin", (first) -> first
+                        .goal("build-info")
+                        .goal("repackage")
+                        .configuration(c -> c
+                                .configure("additionalProperties", conf -> conf
+                                        .add("java.target", "${maven.compiler.target}")
+                                        .add("time", "${maven.build.timestamp}")))
+                );
+
+        // GIT information plugin
+        build.plugin("pl.project13.maven", "git-commit-id-plugin")
+                .configuration(conf -> conf
+                        .add("failOnNoGitDirectory", "false"));
+
+
+        Maven     maven             = metadata.getConfiguration().getEnv().getMaven();
+        String    springBootVersion = projectDescription.getPlatformVersion().toString();
+        ParentPom parentPom         = maven.resolveParentPom(springBootVersion);
+        if (parentPom.isIncludeSpringBootBom()) {
+            String          versionProperty = "spring-boot.version";
+            BillOfMaterials springBootBom   = MetadataBuildItemMapper.toBom(metadata.createSpringBootBom(springBootVersion, versionProperty));
+            if (!hasBom(build, springBootBom)) {
+                build.addInternalVersionProperty(versionProperty, springBootVersion);
+                build.boms().add("spring-boot", springBootBom);
+            }
+        }
+
+//		if (!maven.isSpringBootStarterParent(parentPom)) {
+//			build.setProperty("project.build.sourceEncoding", "UTF-8");
+//			build.setProperty("project.reporting.outputEncoding", "UTF-8");
+//		}
+
+        build.setProperty("java.version", projectDescription.getLanguage().jvmVersion());
+        // FJOR: Custom properties
+        build.setProperty("maven.compiler.source", "${java.version}");
+        build.setProperty("maven.compiler.target", "${java.version}");
+        build.setProperty("project.build.sourceEncoding", "UTF-8");
+        build.setProperty("project.reporting.outputEncoding", "UTF-8");
+        build.setProperty("resource.delimiter", "@");
+        build.setProperty("sonar.language", "java");
+        build.setProperty("maven.compiler.plugin.version", "3.8.0");
+
+        build.parent(parentPom.getGroupId(), parentPom.getArtifactId(), parentPom.getVersion());
+    }
+
+    private boolean hasBom(MavenBuild build, BillOfMaterials bom) {
+        return build.boms().items()
+                .anyMatch((candidate) -> candidate.getGroupId().equals(bom.getGroupId())
+                        && candidate.getArtifactId().equals(bom.getArtifactId()));
+    }
 
 }
