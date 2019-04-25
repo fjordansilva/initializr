@@ -16,13 +16,13 @@
 
 package io.spring.initializr.web.autoconfigure;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import io.spring.initializr.generator.version.VersionProperty;
+
+import java.io.IOException;
 
 /**
  * A {@link SimpleModule} that registers custom serializers.
@@ -31,24 +31,22 @@ import io.spring.initializr.generator.version.VersionProperty;
  */
 class InitializrModule extends SimpleModule {
 
-	InitializrModule() {
-		super("initializr");
-		addSerializer(new VersionPropertySerializer());
-	}
+    InitializrModule() {
+        super("initializr");
+        addSerializer(new VersionPropertySerializer());
+    }
 
-	private static class VersionPropertySerializer
-			extends StdSerializer<VersionProperty> {
+    private static class VersionPropertySerializer extends StdSerializer<VersionProperty> {
 
-		VersionPropertySerializer() {
-			super(VersionProperty.class);
-		}
+        VersionPropertySerializer() {
+            super(VersionProperty.class);
+        }
 
-		@Override
-		public void serialize(VersionProperty value, JsonGenerator gen,
-				SerializerProvider provider) throws IOException {
-			gen.writeString(value.toStandardFormat());
-		}
+        @Override
+        public void serialize(VersionProperty value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+            gen.writeString(value.toStandardFormat());
+        }
 
-	}
+    }
 
 }

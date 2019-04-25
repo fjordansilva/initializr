@@ -51,11 +51,13 @@ public class InitializrMetadata {
     private final SingleSelectCapability languages = new SingleSelectCapability(
             "language", "Language", "programming language");
 
-    private final SingleSelectCapability ci = new SingleSelectCapability(
+    private final SingleSelectCapability cis = new SingleSelectCapability(
             "ci", "Continuous Integration", "Continuous Integration Type");
 
-    private final SingleSelectCapability container = new SingleSelectCapability(
+    private final SingleSelectCapability containers = new SingleSelectCapability(
             "container", "Container System", "Container System");
+
+    private final SingleSelectCapability environments = new SingleSelectCapability("environment", "Development Environment", "Development Environment");
 
     private final TextCapability name = new TextCapability("name", "Name",
             "project name (infer application name)");
@@ -113,12 +115,16 @@ public class InitializrMetadata {
         return languages;
     }
 
-    public SingleSelectCapability getCi() {
-        return ci;
+    public SingleSelectCapability getCis() {
+        return cis;
     }
 
-    public SingleSelectCapability getContainer() {
-        return container;
+    public SingleSelectCapability getContainers() {
+        return containers;
+    }
+
+    public SingleSelectCapability getEnvironments() {
+        return environments;
     }
 
     public TextCapability getName() {
@@ -170,8 +176,9 @@ public class InitializrMetadata {
         languages.merge(other.languages);
         name.merge(other.name);
         description.merge(other.description);
-        ci.merge(other.ci);
-        container.merge(other.container);
+        cis.merge(other.cis);
+        containers.merge(other.containers);
+        environments.merge(other.environments);
         irn.merge(other.irn);
         sia.merge(other.sia);
         groupId.merge(other.groupId);
@@ -187,52 +194,39 @@ public class InitializrMetadata {
         configuration.validate();
         dependencies.validate();
 
-        Map<String, Repository> repositories = configuration.getEnv()
-                .getRepositories();
-        Map<String, BillOfMaterials> boms = configuration.getEnv().getBoms();
+        Map<String, Repository>      repositories = configuration.getEnv().getRepositories();
+        Map<String, BillOfMaterials> boms         = configuration.getEnv().getBoms();
         for (Dependency dependency : dependencies.getAll()) {
             if (dependency.getBom() != null && !boms.containsKey(dependency.getBom())) {
-                throw new InvalidInitializrMetadataException(
-                        "Dependency " + dependency + "defines an invalid BOM id "
-                                + dependency.getBom() + ", available boms " + boms);
+                throw new InvalidInitializrMetadataException("Dependency " + dependency + "defines an invalid BOM id " + dependency.getBom() + ", available boms " + boms);
             }
 
             if (dependency.getRepository() != null
                     && !repositories.containsKey(dependency.getRepository())) {
-                throw new InvalidInitializrMetadataException("Dependency " + dependency
-                        + "defines an invalid repository id " + dependency.getRepository()
-                        + ", available repositories " + repositories);
+                throw new InvalidInitializrMetadataException("Dependency " + dependency + "defines an invalid repository id " + dependency.getRepository() + ", available repositories " + repositories);
             }
         }
         for (BillOfMaterials bom : boms.values()) {
             for (String r : bom.getRepositories()) {
                 if (!repositories.containsKey(r)) {
-                    throw new InvalidInitializrMetadataException(
-                            bom + "defines an invalid repository id " + r
-                                    + ", available repositories " + repositories);
+                    throw new InvalidInitializrMetadataException(bom + "defines an invalid repository id " + r + ", available repositories " + repositories);
                 }
             }
             for (String b : bom.getAdditionalBoms()) {
                 if (!boms.containsKey(b)) {
-                    throw new InvalidInitializrMetadataException(
-                            bom + " defines an invalid " + "additional bom id " + b
-                                    + ", available boms " + boms);
+                    throw new InvalidInitializrMetadataException(bom + " defines an invalid " + "additional bom id " + b + ", available boms " + boms);
                 }
             }
             for (BillOfMaterials.Mapping m : bom.getMappings()) {
                 for (String r : m.getRepositories()) {
                     if (!repositories.containsKey(r)) {
-                        throw new InvalidInitializrMetadataException(
-                                m + " of " + bom + "defines an invalid repository id " + r
-                                        + ", available repositories " + repositories);
+                        throw new InvalidInitializrMetadataException(m + " of " + bom + "defines an invalid repository id " + r + ", available repositories " + repositories);
                     }
 
                 }
                 for (String b : m.getAdditionalBoms()) {
                     if (!boms.containsKey(b)) {
-                        throw new InvalidInitializrMetadataException(m + " of " + bom
-                                + " defines " + "an invalid additional bom id " + b
-                                + ", available boms " + boms);
+                        throw new InvalidInitializrMetadataException(m + " of " + bom + " defines " + "an invalid additional bom id " + b + ", available boms " + boms);
                     }
                 }
             }
@@ -266,9 +260,7 @@ public class InitializrMetadata {
      */
     public String createCliDistributionURl(String extension) {
         String bootVersion = InitializrMetadata.defaultId(bootVersions);
-        return configuration.getEnv().getArtifactRepository()
-                + "org/springframework/boot/spring-boot-cli/" + bootVersion
-                + "/spring-boot-cli-" + bootVersion + "-bin." + extension;
+        return configuration.getEnv().getArtifactRepository() + "org/springframework/boot/spring-boot-cli/" + bootVersion + "/spring-boot-cli-" + bootVersion + "-bin." + extension;
     }
 
     /**
@@ -281,10 +273,8 @@ public class InitializrMetadata {
      *
      * @return a new {@link BillOfMaterials} instance
      */
-    public BillOfMaterials createSpringBootBom(String bootVersion,
-                                               String versionProperty) {
-        BillOfMaterials bom = BillOfMaterials.create("org.springframework.boot",
-                "spring-boot-dependencies", bootVersion);
+    public BillOfMaterials createSpringBootBom(String bootVersion, String versionProperty) {
+        BillOfMaterials bom = BillOfMaterials.create("org.springframework.boot", "spring-boot-dependencies", bootVersion);
         bom.setVersionProperty(VersionProperty.of(versionProperty));
         bom.setOrder(100);
         return bom;
@@ -302,8 +292,9 @@ public class InitializrMetadata {
         defaults.put("packaging", InitializrMetadata.defaultId(packagings));
         defaults.put("javaVersion", InitializrMetadata.defaultId(javaVersions));
         defaults.put("language", InitializrMetadata.defaultId(languages));
-        defaults.put("ci", InitializrMetadata.defaultId(ci));
-        defaults.put("container", InitializrMetadata.defaultId(container));
+        defaults.put("ci", InitializrMetadata.defaultId(cis));
+        defaults.put("container", InitializrMetadata.defaultId(containers));
+        defaults.put("environment", InitializrMetadata.defaultId(environments));
         defaults.put("irn", irn.getContent());
         defaults.put("sia", sia.getContent());
         defaults.put("groupId", groupId.getContent());
@@ -388,10 +379,8 @@ public class InitializrMetadata {
             String value = super.getContent();
             if (value != null) {
                 return value;
-            } else if (groupId.getContent() != null
-                    && artifactId.getContent() != null) {
-                return InitializrConfiguration.cleanPackageName(
-                        groupId.getContent() + "." + artifactId.getContent());
+            } else if (groupId.getContent() != null && artifactId.getContent() != null) {
+                return InitializrConfiguration.cleanPackageName(groupId.getContent() + "." + artifactId.getContent());
             }
             return null;
         }

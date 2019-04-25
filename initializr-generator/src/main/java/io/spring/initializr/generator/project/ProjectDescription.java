@@ -20,6 +20,7 @@ import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.ci.ContinuousIntegration;
 import io.spring.initializr.generator.container.Container;
+import io.spring.initializr.generator.environment.Environment;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
@@ -46,6 +47,8 @@ public class ProjectDescription {
     private ContinuousIntegration ci;
 
     private Container container;
+
+    private Environment environment;
 
     private final Map<String, Dependency> requestedDependencies = new LinkedHashMap<>();
 
@@ -124,6 +127,14 @@ public class ProjectDescription {
 
     public void setContainer(Container container) {
         this.container = container;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 
     public Dependency addDependency(String id, Dependency dependency) {

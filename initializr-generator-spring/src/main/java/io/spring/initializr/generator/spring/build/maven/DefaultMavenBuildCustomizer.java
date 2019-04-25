@@ -47,6 +47,8 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
         build.setName(projectDescription.getName());
         build.setDescription(projectDescription.getDescription());
 
+        System.out.println("Environment: " + projectDescription.getEnvironment());
+
         // URL
         build.setUrl("http://www.renault.com");
 

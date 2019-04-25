@@ -58,7 +58,8 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
                         TemplateVariable.VariableType.REQUEST_PARAM),
                 new TemplateVariable("version",
                         TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("name", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("name",
+                        TemplateVariable.VariableType.REQUEST_PARAM),
                 new TemplateVariable("description",
                         TemplateVariable.VariableType.REQUEST_PARAM),
                 new TemplateVariable("packageName",
@@ -70,6 +71,8 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
                 new TemplateVariable("ci",
                         TemplateVariable.VariableType.REQUEST_PARAM),
                 new TemplateVariable("container",
+                        TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("environment",
                         TemplateVariable.VariableType.REQUEST_PARAM));
     }
 
@@ -87,8 +90,9 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
         singleSelect(delegate, metadata.getJavaVersions());
         singleSelect(delegate, metadata.getLanguages());
         singleSelect(delegate, metadata.getBootVersions());
-        singleSelect(delegate, metadata.getCi());
-        singleSelect(delegate, metadata.getContainer());
+        singleSelect(delegate, metadata.getCis());
+        singleSelect(delegate, metadata.getContainers());
+        singleSelect(delegate, metadata.getEnvironments());
         text(delegate, metadata.getGroupId());
         text(delegate, metadata.getArtifactId());
         text(delegate, metadata.getVersion());

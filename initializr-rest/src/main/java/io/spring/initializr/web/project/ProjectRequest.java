@@ -60,6 +60,8 @@ public class ProjectRequest {
 
     private String container;
 
+    private String environment;
+
     private String packageName;
 
     private String javaVersion;
@@ -193,6 +195,14 @@ public class ProjectRequest {
 
     public void setContainer(String container) {
         this.container = container;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
     }
 
     public String getPackageName() {

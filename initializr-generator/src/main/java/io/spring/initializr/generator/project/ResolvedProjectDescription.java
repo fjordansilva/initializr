@@ -20,6 +20,7 @@ import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.ci.ContinuousIntegration;
 import io.spring.initializr.generator.container.Container;
+import io.spring.initializr.generator.environment.Environment;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
@@ -50,6 +51,8 @@ public final class ResolvedProjectDescription {
 
     private final Container container;
 
+    private final Environment environment;
+
     private final String irn;
 
     private final String sia;
@@ -77,6 +80,7 @@ public final class ResolvedProjectDescription {
         language = description.getLanguage();
         ci = description.getCi();
         container = description.getContainer();
+        environment = description.getEnvironment();
         irn = description.getIrn();
         sia = description.getSia();
         groupId = description.getGroupId();
@@ -127,6 +131,10 @@ public final class ResolvedProjectDescription {
 
     public Container getContainer() {
         return container;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
     }
 
     public String getIrn() {

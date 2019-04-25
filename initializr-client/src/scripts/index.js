@@ -36,6 +36,8 @@ $.fn.dropdown = function () {
 
 $(function () {
 
+    const projectInput = $("input[name='type']");
+    const languageInput = $("input[name='language']");
     const nameInput = $("input[name='name']");
     const groupIdInput = $("input[name='groupId']");
     const artifactIdInput = $("input[name='artifactId']");
@@ -79,6 +81,7 @@ $(function () {
                 case 'language':
                 case 'packaging':
                 case 'javaVersion':
+                case 'environment':
                 case 'ci':
                 case 'container':
                     element = $("a[data-value='" + value + "']");
@@ -99,6 +102,47 @@ $(function () {
         });
     };
 
+    projectInput.on("change", function () {
+        const springbootline = $('#springbootline');
+        const body = $('body');
+
+        const wh = $(window).height();
+        const bh = body.height();
+        const isWindowScroll = bh > wh;
+
+        switch (projectInput.val()) {
+            case 'maven-project':
+                languageInput.val('java');
+                springbootline.slideDown(200, function () {
+                    if (isWindowScroll) {
+                        body.addClass('fixed');
+                    } else {
+                        body.removeClass('fixed');
+                    }
+                });
+                break;
+            case 'nestjs-project':
+                languageInput.val('nestjs');
+                springbootline.slideUp(200, function () {
+                    if (isWindowScroll) {
+                        body.addClass('fixed');
+                    } else {
+                        body.removeClass('fixed');
+                    }
+                });
+                break;
+            case 'angular-project':
+                languageInput.val('angular');
+                springbootline.slideUp(200, function () {
+                    if (isWindowScroll) {
+                        body.addClass('fixed');
+                    } else {
+                        body.removeClass('fixed');
+                    }
+                });
+                break;
+        }
+    });
     groupIdInput.on("change", function () {
         generatePackageName();
     });

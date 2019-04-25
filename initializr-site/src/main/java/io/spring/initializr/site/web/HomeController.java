@@ -77,8 +77,7 @@ public class HomeController {
     @GetMapping(path = "/", produces = "text/html")
     public String home(HttpServletRequest request, Map<String, Object> model) {
         if (isForceSsl() && !request.isSecure()) {
-            String securedUrl = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .scheme("https").build().toUriString();
+            String securedUrl = ServletUriComponentsBuilder.fromCurrentRequest().scheme("https").build().toUriString();
             return "redirect:" + securedUrl;
         }
         renderHome(model);
@@ -100,8 +99,7 @@ public class HomeController {
             if ("types".equals(descriptor.getName())) {
                 model.put("types", removeTypes(metadata.getTypes()));
             } else {
-                model.put(descriptor.getName(),
-                        wrapper.getPropertyValue(descriptor.getName()));
+                model.put(descriptor.getName(), wrapper.getPropertyValue(descriptor.getName()));
             }
         }
 /*
@@ -119,8 +117,7 @@ public class HomeController {
      * @see io.spring.initializr.metadata.InitializrConfiguration.Env#isForceSsl()
      */
     protected String generateAppUrl() {
-        ServletUriComponentsBuilder builder = ServletUriComponentsBuilder
-                .fromCurrentServletMapping();
+        ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
         if (isForceSsl()) {
             builder.scheme("https");
         }
@@ -149,15 +146,15 @@ public class HomeController {
     @GetMapping(path = "/ui/dependencies", produces = "application/json")
     @ResponseBody
     public ResponseEntity<String> dependencies() {
-        List<DependencyGroup> dependencyGroups = metadataProvider.get()
-                .getDependencies().getContent();
-        List<DependencyItem> content = new ArrayList<>();
+        List<DependencyGroup> dependencyGroups = metadataProvider.get().getDependencies().getContent();
+        List<DependencyItem>  content          = new ArrayList<>();
         dependencyGroups
-                .forEach((group) -> group.getContent().forEach((dependency) -> content
-                        .add(new DependencyItem(group.getName(), dependency))));
+                .forEach((group) -> group
+                        .getContent()
+                        .forEach((dependency) -> content
+                                .add(new DependencyItem(group.getName(), dependency))));
         String json = HomeController.writeDependencies(content);
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
-                .eTag(createUniqueId(json)).body(json);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).eTag(createUniqueId(json)).body(json);
     }
 
     private static String writeDependencies(List<DependencyItem> items) {

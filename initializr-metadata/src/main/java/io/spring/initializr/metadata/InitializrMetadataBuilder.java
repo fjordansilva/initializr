@@ -55,8 +55,7 @@ public final class InitializrMetadataBuilder {
      *
      * @see #withInitializrProperties(InitializrProperties, boolean)
      */
-    public InitializrMetadataBuilder withInitializrProperties(
-            InitializrProperties properties) {
+    public InitializrMetadataBuilder withInitializrProperties(InitializrProperties properties) {
         return withInitializrProperties(properties, false);
     }
 
@@ -70,8 +69,7 @@ public final class InitializrMetadataBuilder {
      *
      * @return this instance
      */
-    public InitializrMetadataBuilder withInitializrProperties(
-            InitializrProperties properties, boolean mergeConfiguration) {
+    public InitializrMetadataBuilder withInitializrProperties(InitializrProperties properties, boolean mergeConfiguration) {
         if (mergeConfiguration) {
             configuration.merge(properties);
         }
@@ -113,9 +111,8 @@ public final class InitializrMetadataBuilder {
      * @return a new {@link InitializrMetadata} instance
      */
     public InitializrMetadata build() {
-        InitializrConfiguration config = (configuration != null) ? configuration
-                : new InitializrConfiguration();
-        InitializrMetadata metadata = createInstance(config);
+        InitializrConfiguration config   = (configuration != null) ? configuration : new InitializrConfiguration();
+        InitializrMetadata      metadata = createInstance(config);
         for (InitializrMetadataCustomizer customizer : customizers) {
             customizer.customize(metadata);
         }
@@ -156,7 +153,7 @@ public final class InitializrMetadataBuilder {
             metadata.getDescription().setContent("Demo project for Spring Boot");
         }
         if (!StringUtils.hasText(metadata.getGroupId().getContent())) {
-            metadata.getGroupId().setContent("com.example");
+            metadata.getGroupId().setContent("com.renault");
         }
         if (!StringUtils.hasText(metadata.getVersion().getContent())) {
             metadata.getVersion().setContent("1.0.0-SNAPSHOT");
@@ -174,10 +171,8 @@ public final class InitializrMetadataBuilder {
      *
      * @see #withInitializrProperties(InitializrProperties)
      */
-    public static InitializrMetadataBuilder fromInitializrProperties(
-            InitializrProperties configuration) {
-        return new InitializrMetadataBuilder(configuration)
-                .withInitializrProperties(configuration);
+    public static InitializrMetadataBuilder fromInitializrProperties(InitializrProperties configuration) {
+        return new InitializrMetadataBuilder(configuration).withInitializrProperties(configuration);
     }
 
     /**
@@ -206,8 +201,9 @@ public final class InitializrMetadataBuilder {
             metadata.getPackagings().merge(properties.getPackagings());
             metadata.getJavaVersions().merge(properties.getJavaVersions());
             metadata.getLanguages().merge(properties.getLanguages());
-            metadata.getCi().merge(properties.getCi());
-            metadata.getContainer().merge(properties.getContainer());
+            metadata.getCis().merge(properties.getCis());
+            metadata.getContainers().merge(properties.getContainers());
+            metadata.getEnvironments().merge(properties.getEnvironments());
             properties.getIrn().apply(metadata.getIrn());
             properties.getSia().apply(metadata.getSia());
             properties.getGroupId().apply(metadata.getGroupId());
@@ -220,11 +216,9 @@ public final class InitializrMetadataBuilder {
 
     }
 
-    private static class ResourceInitializrMetadataCustomizer
-            implements InitializrMetadataCustomizer {
+    private static class ResourceInitializrMetadataCustomizer implements InitializrMetadataCustomizer {
 
-        private static final Log logger = LogFactory
-                .getLog(ResourceInitializrMetadataCustomizer.class);
+        private static final Log logger = LogFactory.getLog(ResourceInitializrMetadataCustomizer.class);
 
         private static final Charset UTF_8 = Charset.forName("UTF-8");
 
@@ -238,11 +232,9 @@ public final class InitializrMetadataBuilder {
         public void customize(InitializrMetadata metadata) {
             ResourceInitializrMetadataCustomizer.logger.info("Loading initializr metadata from " + resource);
             try {
-                String content = StreamUtils.copyToString(resource.getInputStream(),
-                        ResourceInitializrMetadataCustomizer.UTF_8);
-                ObjectMapper objectMapper = new ObjectMapper();
-                InitializrMetadata anotherMetadata = objectMapper.readValue(content,
-                        InitializrMetadata.class);
+                String             content         = StreamUtils.copyToString(resource.getInputStream(), ResourceInitializrMetadataCustomizer.UTF_8);
+                ObjectMapper       objectMapper    = new ObjectMapper();
+                InitializrMetadata anotherMetadata = objectMapper.readValue(content, InitializrMetadata.class);
                 metadata.merge(anotherMetadata);
             } catch (Exception ex) {
                 throw new IllegalStateException("Cannot merge", ex);

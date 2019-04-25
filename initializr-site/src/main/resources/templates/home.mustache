@@ -26,6 +26,24 @@
     <form name="form" action="/starter.zip" method="get" autocomplete="off">
         <input style="display:none" type="text" name="fakeusernameremembered"/>
         <input style="display:none" type="password" name="fakepasswordremembered"/>
+        <!-- Renault Info -->
+        <div class="line">
+            <div class="left">Renault Information</div>
+            <div class="right">
+                <div class="project-metadata">
+                    <!-- IRN -->
+                    <div class="control"><label>{{irn.title}}</label>
+                        <input class="control-text" name="irn" value="{{irn.content}}" tabindex="1">
+                    </div>
+                    <!-- SIA -->
+                    <div class="control"><label>{{sia.title}}</label>
+                        <input class="control-text" name="sia" value="{{sia.content}}" tabindex="2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metadata -->
         <div class="line">
             <div class="left">Project</div>
             <div class="right">
@@ -52,7 +70,8 @@
                 </div>
             </div>
         </div>
-        <div class="line">
+
+        <div class="line" id="springbootline">
             <div class="left">Spring Boot</div>
             <div class="right">
                 <div class="radios">
@@ -71,29 +90,45 @@
             <div class="left">Continuous Integration</div>
             <div class="right">
                 <div class="radios">
-                    {{#ci.content}}
+                    {{#cis.content}}
                         <div class="radio{{#default}} active{{/default}}">
                             <a href="#" data-value="{{id}}">{{name}}</a>
                         </div>
                         {{#default}}
                             <input id="input-ci-type" type="hidden" name="ci" value="{{id}}">{{/default}}
-                    {{/ci.content}}
+                    {{/cis.content}}
                 </div>
             </div>
         </div>
         <!-- Containers -->
         <div class="line">
-            <div class="left">Container</div>
+            <div class="left">Deployment Container</div>
             <div class="right">
                 <div class="radios">
-                    {{#container.content}}
+                    {{#containers.content}}
                         <div class="radio{{#default}} active{{/default}}">
                             <a href="#" data-value="{{id}}">{{name}}</a>
                         </div>
                         {{#default}}
                             <input id="input-container-type" type="hidden" name="container"
                                    value="{{id}}">{{/default}}
-                    {{/container.content}}
+                    {{/containers.content}}
+                </div>
+            </div>
+        </div>
+        <!-- Environment -->
+        <div class="line">
+            <div class="left">Environment</div>
+            <div class="right">
+                <div class="radios">
+                    {{#environments.content}}
+                        <div class="radio{{#default}} active{{/default}}">
+                            <a href="#" data-value="{{id}}">{{name}}</a>
+                        </div>
+                        {{#default}}
+                            <input id="input-environment" type="hidden" name="environment"
+                                   value="{{id}}">{{/default}}
+                    {{/environments.content}}
                 </div>
             </div>
         </div>
@@ -103,15 +138,6 @@
             <div class="right">
                 <div class="project-metadata">
                     <input id="baseDir" name="baseDir" type="hidden" value="{{artifactId.content}}">
-                    <!-- IRN -->
-                    <div class="control"><label>{{irn.title}}</label>
-                        <input class="control-text" name="irn" value="{{irn.content}}" tabindex="1">
-                    </div>
-                    <!-- SIA -->
-                    <div class="control"><label>{{sia.title}}</label>
-                        <input class="control-text" name="sia" value="{{sia.content}}" tabindex="2">
-                    </div>
-
                     <div class="control"><label>{{groupId.title}}</label>
                         <input class="control-text" name="groupId" value="{{groupId.content}}" tabindex="3">
                     </div>

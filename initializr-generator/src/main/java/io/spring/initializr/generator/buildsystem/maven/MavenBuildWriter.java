@@ -223,8 +223,10 @@ public class MavenBuildWriter {
 
     private static Collection<Dependency> filterDependencies(DependencyContainer dependencies, DependencyScope... scopes) {
         List<DependencyScope> candidates = Arrays.asList(scopes);
-        return dependencies.items().filter((dep) -> candidates
-                .contains(dep.getScope()))
+        return dependencies
+                .items()
+                .filter((dep) -> candidates
+                        .contains(dep.getScope()))
                 .sorted(DependencyComparator.INSTANCE)
                 .collect(Collectors.toList());
     }

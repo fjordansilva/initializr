@@ -1,17 +1,21 @@
 io.spring.initializr.generator.buildsystem.BuildSystemFactory=\
-io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystemFactory,\
-io.spring.initializr.generator.buildsystem.maven.MavenBuildSystemFactory
+  io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystemFactory,\
+  io.spring.initializr.generator.buildsystem.maven.MavenBuildSystemFactory
 io.spring.initializr.generator.language.LanguageFactory=\
-io.spring.initializr.generator.language.groovy.GroovyLanguageFactory,\
-io.spring.initializr.generator.language.java.JavaLanguageFactory,\
-io.spring.initializr.generator.language.kotlin.KotlinLanguageFactory
+  io.spring.initializr.generator.language.groovy.GroovyLanguageFactory,\
+  io.spring.initializr.generator.language.java.JavaLanguageFactory,\
+  io.spring.initializr.generator.language.kotlin.KotlinLanguageFactory
 io.spring.initializr.generator.packaging.PackagingFactory=\
-io.spring.initializr.generator.packaging.jar.JarPackagingFactory,\
-io.spring.initializr.generator.packaging.war.WarPackagingFactory
+  io.spring.initializr.generator.packaging.jar.JarPackagingFactory,\
+  io.spring.initializr.generator.packaging.war.WarPackagingFactory
 io.spring.initializr.generator.ci.ContinuousIntegrationFactory=\
-io.spring.initializr.generator.ci.jenkins.JenkinsContinuousIntegrationFactory,\
-io.spring.initializr.generator.ci.gitlab.GitlabContinuousIntegrationFactory
+  io.spring.initializr.generator.ci.jenkins.JenkinsContinuousIntegrationFactory,\
+  io.spring.initializr.generator.ci.gitlab.GitlabContinuousIntegrationFactory
 io.spring.initializr.generator.container.ContainerFactory=\
-io.spring.initializr.generator.container.docker.DockerContainerFactory,\
-io.spring.initializr.generator.container.compose.DockerComposeContainerFactory,\
-io.spring.initializr.generator.container.kubernetes.KubernetesContainerFactory
+  io.spring.initializr.generator.container.docker.DockerContainerFactory,\
+  io.spring.initializr.generator.container.compose.DockerComposeContainerFactory,\
+  io.spring.initializr.generator.container.kubernetes.KubernetesContainerFactory
+io.spring.initializr.generator.environment.EnvironmentFactory=\
+  io.spring.initializr.generator.environment.aws.AWSEnvironmentFactory,\
+  io.spring.initializr.generator.environment.gcp.GCPEnvironmentFactory,\
+  io.spring.initializr.generator.environment.intra.IntraEnvironmentFactory

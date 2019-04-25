@@ -71,13 +71,19 @@ public class InitializrProperties extends InitializrConfiguration {
      * Available Continuous Integration Types.
      */
     @JsonIgnore
-    private final List<DefaultMetadataElement> ci = new ArrayList<>();
+    private final List<DefaultMetadataElement> cis = new ArrayList<>();
 
     /**
      * Available Container Types.
      */
     @JsonIgnore
-    private final List<DefaultMetadataElement> container = new ArrayList<>();
+    private final List<DefaultMetadataElement> containers = new ArrayList<>();
+
+    /**
+     * Available Development environments.
+     */
+    @JsonIgnore
+    private final List<DefaultMetadataElement> environments = new ArrayList<>();
 
     /**
      * Renault IRN.
@@ -151,12 +157,16 @@ public class InitializrProperties extends InitializrConfiguration {
         return bootVersions;
     }
 
-    public List<DefaultMetadataElement> getCi() {
-        return ci;
+    public List<DefaultMetadataElement> getCis() {
+        return cis;
     }
 
-    public List<DefaultMetadataElement> getContainer() {
-        return container;
+    public List<DefaultMetadataElement> getContainers() {
+        return containers;
+    }
+
+    public List<DefaultMetadataElement> getEnvironments() {
+        return environments;
     }
 
     public SimpleElement getIrn() {
